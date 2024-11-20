@@ -3,7 +3,7 @@
 const orderNumberEl = document.getElementById("order-number");
 const orderContentEl = document.getElementById("order-content");
 const orderPullerEl = document.getElementById("order-puller");
-const orderStatusEl = document.getElementById("order-status");
+// const orderStatusEl = document.getElementById("order-status");
 // const orderCheckerEl = document.getElementById("order-checker");
 const submitFormEl = document.getElementById("submit-form");
 
@@ -81,26 +81,40 @@ submitFormEl.addEventListener("click", function () {
   const orderNumber = orderNumberEl.value;
   const orderContent = orderContentEl.value;
   const orderPuller = orderPullerEl.value;
-  const orderStatus = orderStatusEl.value;
-  const orderCheckerEl = document.querySelector(
+  const orderStatus = document.querySelector(
+    'input[name="status"]:checked'
+  ).value;
+  const orderChecker = document.querySelector(
     'input[name="checker"]:checked'
-  );
-  const orderChecker = orderCheckerEl.value;
+  ).value;
 
+  // Creating the order data object to send to the backend
   const orderData = {
     OrderNumber: orderNumber,
     OrderContent: orderContent,
     OrderPuller: orderPuller,
-    orderStatus: orderStatus,
-    orderChecker: orderChecker,
+    OrderStatus: orderStatus,
+    OrderChecker: orderChecker,
   };
 
-  if (orderStatus == "incorrect") {
-    const mistakeTypeEl = document.getElementById("mistake-type");
+  if (orderStatus === "incorrect") {
+    const mistakeType = document.querySelector(
+      'input[name="mistake-type"]:checked'
+    ).value;
 
-    const mistakeType = mistakeTypeEl.value;
-    // actualNum desiredNum percentageDifference
+    orderData.mistakeType = mistakeType;
+    // For 'count-error', you can include the desiredNum and actualNum here
   }
-
-  console.log(orderData);
+  console.log("ORDER DATA", orderData);
+  // Sending the data to the server via fetch
+  fetch("http://localhost:5001/items", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(orderData), // Sending orderData instead of newItem
+  })
+    .then((response) => response.json())
+    .then((data) => console.log("Order saved:", data))
+    .catch((error) => console.error("Error saving order:", error));
 });
