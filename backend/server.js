@@ -23,6 +23,7 @@ mongoose
 const itemSchema = new mongoose.Schema(
   {
     OrderNumber: String,
+    Date: String,
     OrderContent: String,
     OrderPuller: String,
     OrderStatus: String,

@@ -3,9 +3,8 @@
 const orderNumberEl = document.getElementById("order-number");
 const orderContentEl = document.getElementById("order-content");
 const orderPullerEl = document.getElementById("order-puller");
-// const orderStatusEl = document.getElementById("order-status");
-// const orderCheckerEl = document.getElementById("order-checker");
 const submitFormEl = document.getElementById("submit-form");
+const correctBox = document.getElementById("correct");
 
 //If Mistake
 const mistakeDiv = document.getElementById("mistake-div");
@@ -29,6 +28,14 @@ function calcDifference(desiredNum, actualNum) {
 
   let percentageDifference = difference / onePercent;
   return percentageDifference;
+}
+
+function formatDate(date) {
+  const d = new Date(date);
+  const month = d.getMonth() + 1; // Months are 0-based, so add 1
+  const day = d.getDate();
+  const year = d.getFullYear();
+  return `${month}/${day}/${year}`;
 }
 ////////////////////////////////////////////////////////////
 //Event Listeners
@@ -67,17 +74,9 @@ incorrectBox.addEventListener("change", function () {
   });
 });
 
-theButton.addEventListener("click", function () {
-  const desiredNum = document.getElementById("desired-num");
-  const actualNum = document.getElementById("actual-num");
-  const percentageDifference = calcDifference(
-    desiredNum.value,
-    actualNum.value
-  );
-  alert(percentageDifference);
-});
-
 submitFormEl.addEventListener("click", function () {
+  const formattedDate = formatDate(new Date());
+
   const orderNumber = orderNumberEl.value;
   const orderContent = orderContentEl.value;
   const orderPuller = orderPullerEl.value;
@@ -91,6 +90,7 @@ submitFormEl.addEventListener("click", function () {
   // Creating the order data object to send to the backend
   const orderData = {
     OrderNumber: orderNumber,
+    Date: formattedDate,
     OrderContent: orderContent,
     OrderPuller: orderPuller,
     OrderStatus: orderStatus,
@@ -105,7 +105,6 @@ submitFormEl.addEventListener("click", function () {
     orderData.mistakeType = mistakeType;
     // For 'count-error', you can include the desiredNum and actualNum here
   }
-  console.log("ORDER DATA", orderData);
   // Sending the data to the server via fetch
   fetch("http://localhost:5001/items", {
     method: "POST",
@@ -117,4 +116,8 @@ submitFormEl.addEventListener("click", function () {
     .then((response) => response.json())
     .then((data) => console.log("Order saved:", data))
     .catch((error) => console.error("Error saving order:", error));
+});
+
+correctBox.addEventListener("change", function () {
+  mistakeDiv.innerHTML = "";
 });
