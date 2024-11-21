@@ -74,50 +74,78 @@ incorrectBox.addEventListener("change", function () {
   });
 });
 
-submitFormEl.addEventListener("click", function () {
-  const formattedDate = formatDate(new Date());
+document
+  .getElementById("order-checking-form")
+  .addEventListener("submit", function (event) {
+    if (!this.checkValidity()) {
+      event.preventDefault(); // Prevent the form from submitting
+      alert("Please fill out all required fields before submitting.");
+      return;
+    }
 
-  const orderNumber = orderNumberEl.value;
-  const orderContent = orderContentEl.value;
-  const orderPuller = orderPullerEl.value;
-  const orderStatus = document.querySelector(
-    'input[name="status"]:checked'
-  ).value;
-  const orderChecker = document.querySelector(
-    'input[name="checker"]:checked'
-  ).value;
-
-  // Creating the order data object to send to the backend
-  const orderData = {
-    OrderNumber: orderNumber,
-    Date: formattedDate,
-    OrderContent: orderContent,
-    OrderPuller: orderPuller,
-    OrderStatus: orderStatus,
-    OrderChecker: orderChecker,
-  };
-
-  if (orderStatus === "incorrect") {
-    const mistakeType = document.querySelector(
-      'input[name="mistake-type"]:checked'
+    const formattedDate = formatDate(new Date());
+    const orderNumber = document.getElementById("order-number").value;
+    const orderContent = document.getElementById("order-content").value;
+    const orderPuller = document.getElementById("order-puller").value;
+    const orderStatus = document.querySelector(
+      'input[name="status"]:checked'
+    ).value;
+    const orderChecker = document.querySelector(
+      'input[name="checker"]:checked'
     ).value;
 
-    orderData.mistakeType = mistakeType;
-    // For 'count-error', you can include the desiredNum and actualNum here
-  }
-  // Sending the data to the server via fetch
-  fetch("http://localhost:5001/items", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(orderData), // Sending orderData instead of newItem
-  })
-    .then((response) => response.json())
-    .then((data) => console.log("Order saved:", data))
-    .catch((error) => console.error("Error saving order:", error));
+    const orderData = {
+      OrderNumber: orderNumber,
+      Date: formattedDate,
+      OrderContent: orderContent,
+      OrderPuller: orderPuller,
+      OrderStatus: orderStatus,
+      OrderChecker: orderChecker,
+    };
+
+    if (orderStatus === "incorrect") {
+      const mistakeType = document.querySelector(
+        'input[name="mistake-type"]:checked'
+      ).value;
+      orderData.mistakeType = mistakeType;
+    }
+
+    fetch("http://localhost:5001/items", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(orderData),
+    })
+      .then((response) => response.json())
+      .then((data) => console.log("Order saved:", data))
+      .catch((error) => console.error("Error saving order:", error));
+  });
+
+document.getElementById("incorrect").addEventListener("change", function () {
+  const mistakeDiv = document.getElementById("mistake-div");
+  mistakeDiv.innerHTML = `
+    <h2>Mistake Type</h2>
+    <label><input type="radio" name="mistake-type" value="count-error" id="count-error" required />Count Error</label>
+    <label><input type="radio" name="mistake-type" value="wrong-item" required />Wrong Item</label>
+    <label><input type="radio" name="mistake-type" value="damage" required />Damage</label>
+    <label><input type="radio" name="mistake-type" value="packaging" required />Packaging Error</label>
+    <div id="count-div"></div>
+  `;
+
+  document
+    .getElementById("count-error")
+    .addEventListener("change", function () {
+      const countDiv = document.getElementById("count-div");
+      countDiv.innerHTML = `
+      <h3>How many should it have been?</h3>
+      <input type="number" id="desired-num" placeholder="Desired Amount" required />
+      <h3>How many are in the unit currently?</h3>
+      <input type="number" id="actual-num" placeholder="Actual Amount" required />
+    `;
+    });
 });
 
-correctBox.addEventListener("change", function () {
-  mistakeDiv.innerHTML = "";
+document.getElementById("correct").addEventListener("change", function () {
+  document.getElementById("mistake-div").innerHTML = "";
 });
