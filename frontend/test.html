@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      fetch("http://localhost:5001/items")
+        .then((response) => response.json())
+        .then((data) => {
+          const statuses = data.map((item) => item.OrderStatus);
+          const mistakeTypes = data
+            .filter((item) => item.mistakeType)
+            .map((item) => item.mistakeType);
+          const checkerNames = data
+            .filter((item) => item.OrderChecker)
+            .map((item) => item.OrderChecker);
+
+          console.log(data);
+          console.log(statuses);
+          console.log(mistakeTypes);
+          console.log(checkerNames);
+        });
+    </script>
+  </body>
+</html>

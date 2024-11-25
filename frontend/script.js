@@ -74,6 +74,34 @@ incorrectBox.addEventListener("change", function () {
   });
 });
 
+document.getElementById("incorrect").addEventListener("change", function () {
+  const mistakeDiv = document.getElementById("mistake-div");
+  mistakeDiv.innerHTML = `
+    <h2>Mistake Type</h2>
+    <label><input type="radio" name="mistake-type" value="count-error" id="count-error" required />Count Error</label>
+    <label><input type="radio" name="mistake-type" value="wrong-item" required />Wrong Item</label>
+    <label><input type="radio" name="mistake-type" value="damage" required />Damage</label>
+    <label><input type="radio" name="mistake-type" value="packaging" required />Packaging Error</label>
+    <div id="count-div"></div>
+  `;
+
+  document
+    .getElementById("count-error")
+    .addEventListener("change", function () {
+      const countDiv = document.getElementById("count-div");
+      countDiv.innerHTML = `
+      <h3>How many should it have been?</h3>
+      <input type="number" id="desired-num" placeholder="Desired Amount" required />
+      <h3>How many are in the unit currently?</h3>
+      <input type="number" id="actual-num" placeholder="Actual Amount" required />
+    `;
+    });
+});
+
+document.getElementById("correct").addEventListener("change", function () {
+  document.getElementById("mistake-div").innerHTML = "";
+});
+
 document
   .getElementById("order-checking-form")
   .addEventListener("submit", function (event) {
@@ -121,31 +149,3 @@ document
       .then((data) => console.log("Order saved:", data))
       .catch((error) => console.error("Error saving order:", error));
   });
-
-document.getElementById("incorrect").addEventListener("change", function () {
-  const mistakeDiv = document.getElementById("mistake-div");
-  mistakeDiv.innerHTML = `
-    <h2>Mistake Type</h2>
-    <label><input type="radio" name="mistake-type" value="count-error" id="count-error" required />Count Error</label>
-    <label><input type="radio" name="mistake-type" value="wrong-item" required />Wrong Item</label>
-    <label><input type="radio" name="mistake-type" value="damage" required />Damage</label>
-    <label><input type="radio" name="mistake-type" value="packaging" required />Packaging Error</label>
-    <div id="count-div"></div>
-  `;
-
-  document
-    .getElementById("count-error")
-    .addEventListener("change", function () {
-      const countDiv = document.getElementById("count-div");
-      countDiv.innerHTML = `
-      <h3>How many should it have been?</h3>
-      <input type="number" id="desired-num" placeholder="Desired Amount" required />
-      <h3>How many are in the unit currently?</h3>
-      <input type="number" id="actual-num" placeholder="Actual Amount" required />
-    `;
-    });
-});
-
-document.getElementById("correct").addEventListener("change", function () {
-  document.getElementById("mistake-div").innerHTML = "";
-});

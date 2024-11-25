@@ -8,13 +8,24 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   </head>
   <body>
-    <h2>Charts</h2>
-    <h1>Orders and Mistakes</h1>
-    <canvas id="statusChart" width="400" height="200"></canvas>
-    <h1>Orders Per Checker</h1>
-    <canvas id="mistakeChart" width="400" height="200"></canvas>
-    <h1>Mistakes Caught Per Checker</h1>
-    <canvas id="mistakeCheckerChart"></canvas>
+    <h1>General Data</h1>
+    <div>
+      <h3>Orders Checked</h3>
+      <p>blank</p>
+      <h3>Mistakes Caught</h3>
+      <p>blank</p>
+      <h3>Mistake Percentage</h3>
+      <p>blank</p>
+    </div>
+    <div id="charts">
+      <h1>Charts</h1>
+      <h2>Orders and Mistakes</h2>
+      <canvas id="statusChart" width="400" height="200"></canvas>
+      <h2>Orders Checker Per Checker</h2>
+      <canvas id="mistakeChart" width="400" height="200"></canvas>
+      <h2>Mistakes Caught Per Checker</h2>
+      <canvas id="mistakeCheckerChart"></canvas>
+    </div>
 
     <h1>Order List</h1>
     <div id="order-list"></div>
@@ -141,7 +152,7 @@
             }
             return acc;
           }, {});
-
+          console.log("mistakesByChecker", mistakesByChecker);
           // Prepare data for Mistake Chart (Bar)
           const mistakeCheckerLabels = Object.keys(mistakesByChecker);
           const mistakeCheckerData = Object.values(mistakesByChecker);
