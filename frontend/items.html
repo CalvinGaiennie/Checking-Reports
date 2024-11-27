@@ -11,11 +11,11 @@
     <h1>General Data</h1>
     <div>
       <h3>Orders Checked</h3>
-      <p>blank</p>
+      <p id="orders-checked">blank</p>
       <h3>Mistakes Caught</h3>
-      <p>blank</p>
+      <p id="total-mistakes-caught">blank</p>
       <h3>Mistake Percentage</h3>
-      <p>blank</p>
+      <p id="mistake-percentage">blank</p>
     </div>
     <div id="charts">
       <h1>Charts</h1>
@@ -35,13 +35,13 @@
       fetch("http://localhost:5001/items")
         .then((response) => response.json())
         .then((data) => {
-          console.log(data); // Log the fetched data to verify
+          // console.log(data); // Log the fetched data to verify
           const orderListEl = document.getElementById("order-list");
 
           if (data.length > 0) {
             // Loop through the items and display each one
             data.forEach((item) => {
-              console.log(item); // Log each item to ensure it's structured as expected
+              // console.log(item); // Log each item to ensure it's structured as expected
               const orderDiv = document.createElement("div");
               orderDiv.style.marginBottom = "20px"; // Style to separate orders
               orderDiv.innerHTML = `
@@ -92,6 +92,24 @@
           const statusLabels = Object.keys(statusCounts);
           const statusData = Object.values(statusCounts);
 
+          const ordersCheckedEl = document.getElementById("orders-checked");
+          const mistakesCaughtEl = document.getElementById(
+            "total-mistakes-caught"
+          );
+          const mistakePercentageEl =
+            document.getElementById("mistake-percentage");
+
+          const mistakesCaught = statuses.filter(
+            (status) => status != "correct"
+          ).length;
+          const totalChecked = `${statusData[0] + mistakesCaught}`;
+
+          ordersCheckedEl.innerHTML = totalChecked;
+          mistakesCaughtEl.innerHTML = mistakesCaught;
+
+          mistakePercentageEl.innerHTML = `${
+            (mistakesCaught / totalChecked) * 100
+          }%`;
           // Create Status Chart (Bar)
           new Chart(document.getElementById("statusChart"), {
             type: "bar",
@@ -152,7 +170,6 @@
             }
             return acc;
           }, {});
-          console.log("mistakesByChecker", mistakesByChecker);
           // Prepare data for Mistake Chart (Bar)
           const mistakeCheckerLabels = Object.keys(mistakesByChecker);
           const mistakeCheckerData = Object.values(mistakesByChecker);
