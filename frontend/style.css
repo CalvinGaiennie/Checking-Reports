@@ -3,10 +3,19 @@ body {
   background-color: #f5f5f5;
 }
 
-#order-list {
-  margin: 20px;
+#body {
+  margin: 6vw;
 }
 
-#body {
-  margin: 40px;
+canvas {
+  max-width: 800px;
+  max-height: 400px;
+}
+
+.flex {
+  display: flex;
+}
+
+.data {
+  margin-right: 50px;
 }
