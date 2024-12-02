@@ -14,6 +14,7 @@ fetch("http://localhost:5001/items")
     data = jsonData;
     ////
     const testDataEl = document.getElementById("test-data");
+
     const statuses = data.map((item) => item.OrderStatus);
     const mistakeTypes = data
       .filter((item) => item.mistakeType)
@@ -44,7 +45,7 @@ fetch("http://localhost:5001/items")
 
     // Cr
     ////////////////////////////////////////////////////////////////////////////////
-
+    // Data before Charts
     const ordersCheckedEl = document.getElementById("orders-checked");
     const mistakesCaughtEl = document.getElementById("total-mistakes-caught");
     const mistakePercentageEl = document.getElementById("mistake-percentage");
@@ -54,12 +55,16 @@ fetch("http://localhost:5001/items")
     ).length;
     const totalChecked = `${statusData[0] + mistakesCaught}`;
 
-    // Data before Charts
     ordersCheckedEl.innerHTML = totalChecked;
     mistakesCaughtEl.innerHTML = mistakesCaught;
 
-    mistakePercentageEl.innerHTML = `${(mistakesCaught / totalChecked) * 100}%`;
+    const mistakePercentage = 100 - (mistakesCaught / totalChecked) * 100;
 
+    mistakePercentageEl.innerHTML = `${parseFloat(
+      mistakePercentage.toFixed(2)
+    )}%`;
+
+    /////////////////////////////////////
     // Create Status Chart (Bar)
     new Chart(document.getElementById("statusChart"), {
       type: "bar",
@@ -129,8 +134,14 @@ fetch("http://localhost:5001/items")
         return counts;
       }, {});
 
+    // for the fake data
     const orderedKeys = ["checker1", "checker2", "checker3", "checker4"];
 
+    // const orderedCheckerMistakeCounts = Object.fromEntries(
+    //   orderedKeys.map((key) => [key, mistakesByChecker[key] || 0])
+    // );
+
+    //for the real data
     const orderedCheckerMistakeCounts = Object.fromEntries(
       orderedKeys.map((key) => [key, mistakesByChecker[key] || 0])
     );
