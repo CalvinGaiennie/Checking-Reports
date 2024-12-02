@@ -7,6 +7,7 @@ fetch("http://localhost:5001/items")
       .filter((item) => item.mistakeType)
       .map((item) => item.mistakeType);
     // Count occurrences of each mistake type and correct orders for the chart
+    testDataEl.innerHTML = JSON.stringify(mistakeTypes);
     const statusCounts = mistakeTypes.reduce(
       (acc, type) => {
         acc[type] = (acc[type] || 0) + 1;
@@ -18,9 +19,18 @@ fetch("http://localhost:5001/items")
     );
 
     // Prepare data for Status Chart (Bar)
-    const statusLabels = Object.keys(statusCounts);
-    const statusData = Object.values(statusCounts);
+    const filteredStatusCounts = Object.entries(statusCounts).filter(
+      ([key, value]) => key !== "Correct"
+    );
 
+    // Extract labels and data after filtering
+    const statusLabels = filteredStatusCounts.map(([key]) => key);
+    const statusData = filteredStatusCounts.map(([_, value]) => value);
+
+    // Debug: Check the filtered data
+    testDataEl.innerHTML = JSON.stringify(data);
+
+    // Cr
     ////////////////////////////////////////////////////////////////////////////////
 
     const ordersCheckedEl = document.getElementById("orders-checked");
