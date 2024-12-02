@@ -1,13 +1,28 @@
+let jsonData;
+
+fetch("../json/output.json")
+  .then((response) => response.json())
+  .then((data) => {
+    jsonData = data;
+  })
+  .catch((error) => console.error("Error fetching JSON:", error));
+
 fetch("http://localhost:5001/items")
   .then((response) => response.json())
   .then((data) => {
+    //Use other data
+    data = jsonData;
+    ////
     const testDataEl = document.getElementById("test-data");
     const statuses = data.map((item) => item.OrderStatus);
     const mistakeTypes = data
       .filter((item) => item.mistakeType)
       .map((item) => item.mistakeType);
     // Count occurrences of each mistake type and correct orders for the chart
-    testDataEl.innerHTML = JSON.stringify(mistakeTypes);
+
+    //Test
+    // testDataEl.innerHTML = JSON.stringify(jsonData);
+
     const statusCounts = mistakeTypes.reduce(
       (acc, type) => {
         acc[type] = (acc[type] || 0) + 1;
@@ -26,9 +41,6 @@ fetch("http://localhost:5001/items")
     // Extract labels and data after filtering
     const statusLabels = filteredStatusCounts.map(([key]) => key);
     const statusData = filteredStatusCounts.map(([_, value]) => value);
-
-    // Debug: Check the filtered data
-    testDataEl.innerHTML = JSON.stringify(data);
 
     // Cr
     ////////////////////////////////////////////////////////////////////////////////
