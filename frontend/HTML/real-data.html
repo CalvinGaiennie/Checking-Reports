@@ -10,6 +10,10 @@
   <body id="body">
     <div id="general-data">
       <h1>General Data</h1>
+      <select id="data-source">
+        <option value="../json/output.json">Legacy Data</option>
+        <option value="http://localhost:5001/items">Live Data</option>
+      </select>
       <div class="flex">
         <div class="data">
           <h3>Orders Checked</h3>
@@ -40,6 +44,5 @@
     <div id="order-list"></div>
     <script src="../JS/recieveOrders.js"></script>
     <script src="../JS/realDataCharts.js"></script>
-    <!-- <script src="../JS/inputDataRefactor.js"></script> -->
   </body>
 </html>
