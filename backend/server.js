@@ -10,15 +10,27 @@ const PORT = process.env.PORT || 5001;
 app.use(cors());
 app.use(express.json()); // To parse JSON bodies
 
+const oldDB = "mongodb://localhost:27017/OrderReports";
+const newDB =
+  "mongodb://calvingaiennie:337-Cosmoga1@cluster0.gxlxw.mongodb.net/OrderReports";
 // MongoDB connection
 mongoose
-  .connect("mongodb://localhost:27017/OrderReports", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  .connect(oldDB)
   .then(() => console.log("Connected to MongoDB"))
   .catch((err) => console.log("Error connecting to MongoDB:", err));
 
+// Add event listeners for connection status
+mongoose.connection.on("connected", () => {
+  console.log("MongoDB connection state: Connected (1)");
+});
+
+mongoose.connection.on("error", (err) => {
+  console.error("MongoDB connection error:", err);
+});
+
+mongoose.connection.on("disconnected", () => {
+  console.log("MongoDB connection state: Disconnected (0)");
+});
 // Define the item schema
 const itemSchema = new mongoose.Schema(
   {
@@ -42,10 +54,10 @@ app.get("/items", async (req, res) => {
     const items = await Item.find();
     res.json(items);
   } catch (err) {
-    res.status(500).send("Error fetching items");
+    console.error("Error fetching items:", err);
+    res.status(500).json({ error: "Error fetching items" }); // Return JSON
   }
 });
-
 app.post("/items", async (req, res) => {
   try {
     const newItem = new Item(req.body);
