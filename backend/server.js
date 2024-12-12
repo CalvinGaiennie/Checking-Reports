@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+require("dotenv").config();
 
 // Initialize the app
 const app = express();
@@ -10,13 +11,13 @@ const PORT = process.env.PORT || 5001;
 app.use(cors());
 app.use(express.json()); // To parse JSON bodies
 
-const oldDB = "mongodb://localhost:27017/OrderReports";
-const newDB =
-  "mongodb://calvingaiennie:337-Cosmoga1@cluster0.gxlxw.mongodb.net/OrderReports";
 // MongoDB connection
+
+//mongodb://localhost:27017/your_database_name
+//process.env.MONGODB_URI
 mongoose
-  .connect(oldDB)
-  .then(() => console.log("Connected to MongoDB"))
+  .connect("mongodb://localhost:27017/OrderReports")
+  .then(() => console.log("Connected to MongoDB Atlas"))
   .catch((err) => console.log("Error connecting to MongoDB:", err));
 
 // Add event listeners for connection status
