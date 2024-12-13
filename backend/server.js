@@ -12,11 +12,11 @@ app.use(cors());
 app.use(express.json()); // To parse JSON bodies
 
 // MongoDB connection
-
-//mongodb://localhost:27017/your_database_name
-//process.env.MONGODB_URI
+const oldDb = "mongodb://localhost:27017/OrderReports";
+const MONGODB_URI = process.env.MONGODB_URI;
+mongoose;
 mongoose
-  .connect("mongodb://localhost:27017/OrderReports")
+  .connect(MONGODB_URI)
   .then(() => console.log("Connected to MongoDB Atlas"))
   .catch((err) => console.log("Error connecting to MongoDB:", err));
 
@@ -43,7 +43,7 @@ const itemSchema = new mongoose.Schema(
     OrderChecker: String,
     mistakeType: String, // If applicable
   },
-  { collection: "CheckedOrders" }
+  { collection: "Live-Orders" }
 );
 
 // Create the Item model based on the schema
@@ -52,11 +52,16 @@ const Item = mongoose.model("Item", itemSchema);
 // API routes
 app.get("/items", async (req, res) => {
   try {
+    console.log("Attempting to fetch items from database...");
     const items = await Item.find();
+    console.log(`Successfully fetched ${items.length} items`);
     res.json(items);
   } catch (err) {
-    console.error("Error fetching items:", err);
-    res.status(500).json({ error: "Error fetching items" }); // Return JSON
+    console.error("Detailed error:", err);
+    res.status(500).json({
+      error: "Error fetching items",
+      details: err.message,
+    });
   }
 });
 app.post("/items", async (req, res) => {
@@ -72,4 +77,8 @@ app.post("/items", async (req, res) => {
 // Start the server
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
+});
+
+mongoose.connection.once("open", () => {
+  console.log("MongoDB connection established successfully");
 });

@@ -3,10 +3,16 @@ const sourceEl = document.getElementById("data-source");
 let source = "../json/output.json";
 
 function fetchDataAndRenderOrders() {
+  console.log("Attempting to fetch from:", source);
   fetch(source)
-    .then((response) => response.json())
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json();
+    })
     .then((data) => {
-      // console.log(data); // Log the fetched data to verify
+      console.log("Received data:", data);
       const orderListEl = document.getElementById("order-list");
       orderListEl.innerHTML = "";
       if (data.length > 0) {
@@ -37,10 +43,13 @@ function fetchDataAndRenderOrders() {
     })
     .catch((error) => {
       console.error("Error fetching items:", error);
+      const orderListEl = document.getElementById("order-list");
+      orderListEl.innerHTML = `<p>Error loading orders: ${error.message}</p>`;
     });
 }
 fetchDataAndRenderOrders();
 sourceEl.addEventListener("change", function () {
   source = sourceEl.value;
+  console.log("Data source changed to:", source);
   fetchDataAndRenderOrders();
 });

@@ -10,7 +10,9 @@ const mistakePercentageEl = document.getElementById("mistake-percentage");
 
 let statusChart, checkerChart, mistakeCheckerChart;
 
+//default data source is the old data in the json file
 let dataSource = "../json/output.json";
+
 ////////////////////////////////////////////////////
 function fetchDataAndRenderCharts() {
   fetch(dataSource)
