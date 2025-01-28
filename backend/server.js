@@ -16,7 +16,7 @@ const oldDb = "mongodb://localhost:27017/OrderReports";
 const MONGODB_URI = process.env.MONGODB_URI;
 mongoose;
 mongoose
-  .connect(oldDb)
+  .connect(MONGODB_URI)
   .then(() => console.log("Connected to MongoDB Atlas"))
   .catch((err) => console.log("Error connecting to MongoDB:", err));
 
@@ -43,7 +43,7 @@ const itemSchema = new mongoose.Schema(
     OrderChecker: String,
     mistakeType: String, // If applicable
   },
-  { collection: "CheckedOrders" }
+  { collection: "Live-Data" }
 );
 
 // Create the Item model based on the schema
